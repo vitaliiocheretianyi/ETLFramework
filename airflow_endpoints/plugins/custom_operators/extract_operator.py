@@ -1,22 +1,33 @@
-from airflow.hooks.base import BaseHook
-from utils.api_extractor import APIExtractor
-import requests
+from airflow.models import BaseOperator
+from airflow.utils.decorators import apply_defaults
+from typing import Dict, Any
+from airflow.plugins.custom_hooks.APIExtractorHook import APIExtractorHook
 
-class APIExtractorHook(APIExtractor, BaseHook):
-    def __init__(self, conn_id: str):
-        connection = self.get_connection(conn_id)
-        base_url = connection.host
-        headers = {"Authorization": f"Bearer {connection.password}"}
-        super().__init__(base_url, headers)
 
-    def get_conn(self) -> requests.Session:
-        return self.connect()
+class ExtractOperator(BaseOperator):
+    @apply_defaults
+    def __init__(
+            self,
+            http_conn_id: str,
+            endpoint: str,
+            output_path: str,
+            params=None,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.http_conn_id = http_conn_id
+        self.endpoint = endpoint
+        self.output_path = output_path
+        self.params = params
 
-    def disconnect(self) -> None:
-        self.close_connection()
+    def execute(self, context: Dict[str, Any]) -> None:
+        # Instantiate the APIExtractorHook
+        api_hook = APIExtractorHook(http_conn_id=self.http_conn_id)
 
-    def __enter__(self):
-        return self.get_conn()
+        # Fetch data from the API
+        data = api_hook.fetch_data(self.endpoint, self.params)
 
-    def __exit__(self, *args, **kwargs):
-        self.disconnect()
+        # Write the data to the output path
+        with open(self.output_path, "w") as output_file:
+            json.dump(data, output_file)
