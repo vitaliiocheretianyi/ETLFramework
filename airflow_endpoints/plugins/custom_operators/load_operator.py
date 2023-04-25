@@ -5,9 +5,10 @@ from datetime import datetime
 from typing import Dict, Any
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
-from airflow.plugins.custom_hooks.DatabaseHook import DatabaseHook
+from airflow_endpoints.plugins.custom_hooks.database_hook import DatabaseHook
 from data.dynamic_models import create_dynamic_model
 from sqlalchemy import Column, Integer, String, DateTime, Float, MetaData
+from utils.helpers import infer_column_type
 
 class LoadOperator(BaseOperator):
     @apply_defaults
@@ -33,16 +34,7 @@ class LoadOperator(BaseOperator):
         columns = []
         first_record = data[0]
         for key, value in first_record.items():
-            column_type = String
-            if isinstance(value, int):
-                column_type = Integer
-            elif isinstance(value, float):
-                column_type = Float
-            elif isinstance(value, str):
-                column_type = String
-            elif isinstance(value, datetime):
-                column_type = DateTime
-
+            column_type = infer_column_type(value)
             columns.append(Column(key, column_type))
 
         # Create a dynamic ORM model based on the destination table
