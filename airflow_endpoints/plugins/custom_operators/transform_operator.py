@@ -6,15 +6,16 @@ from typing import Dict, Any
 from pyspark.sql import SparkSession
 from spark_jobs.reusable_spark_job import transform_data
 
+
 class TransformOperator(BaseOperator):
     @apply_defaults
     def __init__(
-        self,
-        input_data: str,
-        output_data: str,
-        spark_job_config: str,
-        *args,
-        **kwargs,
+            self,
+            input_data: str,
+            output_data: str,
+            spark_job_config: str,
+            *args,
+            **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.input_data = input_data

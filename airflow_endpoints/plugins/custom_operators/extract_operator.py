@@ -1,7 +1,7 @@
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from typing import Dict, Any
-from airflow_endpoints.plugins.custom_hooks.APIExtractorHook import APIExtractorHook
+from airflow_endpoints.plugins.custom_hooks.api_hook import APIExtractorHook
 
 
 class ExtractOperator(BaseOperator):

@@ -1,5 +1,3 @@
-# airflow/plugins/custom_operators/LoadOperator.py
-
 import json
 from datetime import datetime
 from typing import Dict, Any
@@ -10,15 +8,16 @@ from data.dynamic_models import create_dynamic_model
 from sqlalchemy import Column, Integer, String, DateTime, Float, MetaData
 from utils.helpers import infer_column_type
 
+
 class LoadOperator(BaseOperator):
     @apply_defaults
     def __init__(
-        self,
-        input_data: str,
-        db_conn_id: str,
-        destination_table: str,
-        *args,
-        **kwargs,
+            self,
+            input_data: str,
+            db_conn_id: str,
+            destination_table: str,
+            *args,
+            **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.input_data = input_data
