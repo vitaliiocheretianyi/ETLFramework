@@ -1,0 +1,7 @@
+tasks:
+  - task_id: transform_task
+    task_type: TransformOperator
+    input_file: /path/to/input/data
+    output_file: /path/to/output/data
+    spark_job: spark_jobs.reusable_spark_job.transform_data
+    spark_config: spark_jobs/spark_configs.yaml

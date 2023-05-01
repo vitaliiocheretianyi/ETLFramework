@@ -1,3 +1,9 @@
 transformations:
   column1: uppercase
-  column2: uppercase
+  column2: none
+  column3: uppercase
+
+required_columns:
+  - column1
+  - column2
+  - column3

@@ -16,6 +16,10 @@ def transform_data(spark: SparkSession, input_data: str, output_data: str, confi
     # Read the input data
     df = spark.read.json(input_data)
 
+    # Select the required columns
+    required_columns = config["required_columns"]
+    df = df.select(*required_columns)
+
     # Apply transformations based on the config
     for column, transformation in config["transformations"].items():
         if transformation == "uppercase":
